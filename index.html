@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fluffy Pet</title>
+
+  <style>
+    html, body {
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      background-color: pink;
+      font-family: 'Roboto Condensed';
+    }
+
+    div.title {
+      z-index: 3;
+      display: inline-block;
+      float: left;
+      width: 100%;
+      height: 100%;
+      background-color: pink;
+      background-image: url('images/logo.jpg');
+      background-size: cover;
+      text-align: center;
+    }
+
+    img.title {
+      /*padding: 50px;*/
+    }
+
+    img.start {
+      margin: 100px;
+    }
+
+    img.start:active {
+      border: 1px solid #eee;
+      border-radius: 190px;
+    }
+
+    div.container {
+      padding: 10px;
+      border: 2px solid #F90;
+      height: 600px;
+      margin: 50px auto;
+       background: repeating-linear-gradient(0deg, rgb(221, 221, 221) 0px, rgb(221, 221, 221) 1px,transparent 1px, transparent 21px),repeating-linear-gradient(90deg, rgb(221, 221, 221) 0px, rgb(221, 221, 221) 1px,transparent 1px, transparent 21px),linear-gradient(90deg, hsl(104,0%,96%),hsl(104,0%,96%));
+    }
+    h1 { margin-top: 150px; text-align: center; }
+
+    .draggable {
+      width: 140px;
+      height: 140px;
+      /*background: #F90;*/
+      border-radius: 10px;
+      margin: 0 10px 10px 0;
+      float: left;
+      background-image: url('images/fluffycat.png');
+      background-size: cover;
+    }
+
+    .cat {
+      background-image: url('images/fluffycat.png');
+    }
+
+    .dog {
+      background-image: url('images/fluffydog.png');
+    }
+
+    .parrot {
+      background-image: url('images/fluffyparrot.png');
+    }
+
+    .draggable.is-pointer-down {
+      /*box-shadow: 0px 0px 30px 20px #0ff;*/
+      z-index: 2; /* above other draggies */
+    }
+    .draggable.is-dragging { opacity: 0.7; }
+
+    .btn-add {
+      width: 80px;
+      height: 80px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      margin: 0 10px 10px 0;
+      float: left;
+      background-image: url('images/fluffycat.png');
+      background-size: cover;
+    }
+
+    .btn-add:active {
+      border: 1px solid #000;
+    }
+
+    .btn-add-dog {
+      background-image: url('images/fluffydog.png');
+    }
+
+    .btn-add-parrot {
+      background-image: url('images/fluffyparrot.png');
+    }
+  </style>
+
+  <script src="javascript/jquery.js"></script>
+  <script src="javascript/drag.js"></script>
+
+  <script>
+    $(document).ready( function() {
+      var $draggables = $('.draggable').draggabilly({
+        // contain to parent element
+        containment: true,
+        grid: [ 20, 20 ]
+      });
+
+      setInterval(function(){
+        $('.draggable').each(function(index, item){
+          var that = $(this);
+          var width = $('.container').width();
+          var position = that.position();
+          var maximum = 1;
+          var minimum = -1;
+          var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+
+          if (that.hasClass('is-pointer-down')) {
+            //
+          } else {
+            if (position.left > width-150) {
+              randomnumber = -randomnumber;
+            } else {
+              that.css('left', position.left + randomnumber + 'px');
+            }
+          }
+        });
+      }, 200);
+
+      $('.btn-add').on('click', function() {
+        var fluffy = $(this).data('fluffy');
+        $('.container').append('<div class="draggable ' + fluffy + '"></div>');
+
+        $('.draggable').draggabilly({
+          // contain to parent element
+          containment: true,
+          grid: [ 20, 20 ]
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="title">
+    <img class="start" src="images/start.png" onclick="$('div.title').remove()" />
+    <br />
+    <img class="title" src="images/title.jpg" />
+  </div>
+
+  <div>
+    <div class="container">
+      <!-- <div class="draggable"></div>
+      <div class="draggable"></div>
+      <div class="draggable"></div> -->
+    </div>
+
+    <div class="tools">
+      <div class="btn btn-add" data-fluffy="cat"></div>
+      <div class="btn btn-add btn-add-dog" data-fluffy="dog"></div>
+      <div class="btn btn-add btn-add-parrot" data-fluffy="parrot"></div>
+    </div>
+  </div>
+</body>
+
+</html>
