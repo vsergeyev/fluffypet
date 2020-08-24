@@ -59,6 +59,8 @@
       float: left;
       background-image: url('images/fluffycat.png');
       background-size: cover;
+      position: absolute;
+      cursor: pointer;
     }
 
     .cat {
@@ -69,15 +71,43 @@
       background-image: url('images/fluffydog.png');
     }
 
+    .bunny {
+      background-image: url('images/fluffybunny.png');
+    }
+
+    .chick {
+      background-image: url('images/fluffychick.png');
+    }
+
+    .hamster {
+      background-image: url('images/fluffyhamster.png');
+    }
+
+    .mouse {
+      background-image: url('images/fluffymouse.png');
+    }
+
     .parrot {
+      width: 100px;
+      height: 100px;
       background-image: url('images/fluffyparrot.png');
     }
 
+    .horse {
+      width: 160px;
+      height: 160px;
+      background-image: url('images/fluffyhorse.png');
+    }
+
     .draggable.is-pointer-down {
-      /*box-shadow: 0px 0px 30px 20px #0ff;*/
+      /*box-shadow: 10px 10px 12px 0px rgba(0,0,0,0.75);*/
+      -webkit-filter: drop-shadow( 10px 10px 5px rgba(0,0,0,0.75) );
+      filter: drop-shadow( 10px 10px 5px rgba(0,0,0,0.75) );
       z-index: 2; /* above other draggies */
     }
-    .draggable.is-dragging { opacity: 0.7; }
+    .draggable.is-dragging {
+      /*opacity: 0.7;*/
+    }
 
     .btn-add {
       width: 80px;
@@ -101,6 +131,26 @@
     .btn-add-parrot {
       background-image: url('images/fluffyparrot.png');
     }
+
+    .btn-add-horse {
+      background-image: url('images/fluffyhorse.png');
+    }
+
+    .btn-add-bunny {
+      background-image: url('images/fluffybunny.png');
+    }
+
+    .btn-add-chick {
+      background-image: url('images/fluffychick.png');
+    }
+
+    .btn-add-hamster {
+      background-image: url('images/fluffyhamster.png');
+    }
+
+    .btn-add-mouse {
+      background-image: url('images/fluffymouse.png');
+    }
   </style>
 
   <script src="javascript/jquery.js"></script>
@@ -108,36 +158,60 @@
 
   <script>
     $(document).ready( function() {
+      var next_id = 1;
+      var speeds = {
+        'cat': 8,
+        'dog': 8,
+        'parrot': 5,
+        'horse': 15,
+        'hamster': 8,
+        'bunny': 12,
+        'chick': 8,
+        'mouse': 10,
+      };
+
       var $draggables = $('.draggable').draggabilly({
         // contain to parent element
         containment: true,
         grid: [ 20, 20 ]
       });
 
-      setInterval(function(){
-        $('.draggable').each(function(index, item){
-          var that = $(this);
-          var width = $('.container').width();
-          var position = that.position();
-          var maximum = 1;
-          var minimum = -1;
-          var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
-
-          if (that.hasClass('is-pointer-down')) {
-            //
-          } else {
-            if (position.left > width-150) {
-              randomnumber = -randomnumber;
-            } else {
-              that.css('left', position.left + randomnumber + 'px');
-            }
-          }
-        });
-      }, 200);
-
       $('.btn-add').on('click', function() {
         var fluffy = $(this).data('fluffy');
-        $('.container').append('<div class="draggable ' + fluffy + '"></div>');
+        var id = next_id;
+        next_id += 1;
+
+        var maximum = 4;
+        var minimum = 0;
+        var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+
+        $('.container').append('<div id="fluffy' + id + '" class="draggable ' + fluffy + '"  data-go="right"></div>');
+
+        $("#fluffy" + id).css('top', randomnumber * 120 + 50);
+
+        setInterval(function() {
+          var fluffyOw = $("#fluffy" + id);
+
+          if (fluffyOw.hasClass('is-pointer-down')) {
+            return;
+          }
+
+          if (fluffyOw.data('go') == 'right') {
+            if (fluffyOw.position().left > $('.container').width() - 150) {
+              fluffyOw.data('go', 'left');
+
+            } else {
+              fluffyOw.css('left', fluffyOw.position().left + speeds[fluffy]);
+            }
+          } else {
+            if (fluffyOw.position().left < 50) {
+              fluffyOw.data('go', 'right');
+
+            } else {
+              fluffyOw.css('left', fluffyOw.position().left - speeds[fluffy]);
+            }
+          }
+        }, 200);
 
         $('.draggable').draggabilly({
           // contain to parent element
@@ -158,15 +232,17 @@
 
   <div>
     <div class="container">
-      <!-- <div class="draggable"></div>
-      <div class="draggable"></div>
-      <div class="draggable"></div> -->
     </div>
 
     <div class="tools">
       <div class="btn btn-add" data-fluffy="cat"></div>
       <div class="btn btn-add btn-add-dog" data-fluffy="dog"></div>
       <div class="btn btn-add btn-add-parrot" data-fluffy="parrot"></div>
+      <div class="btn btn-add btn-add-horse" data-fluffy="horse"></div>
+      <div class="btn btn-add btn-add-bunny" data-fluffy="bunny"></div>
+      <div class="btn btn-add btn-add-hamster" data-fluffy="hamster"></div>
+      <div class="btn btn-add btn-add-mouse" data-fluffy="mouse"></div>
+      <div class="btn btn-add btn-add-chick" data-fluffy="chick"></div>
     </div>
   </div>
 </body>
